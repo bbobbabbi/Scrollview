@@ -11,10 +11,12 @@ public class Cell : MonoBehaviour
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private TMP_Text subTitleText;
 
-    public void SetItem(Item item) { 
+    public int Index { get; private set; }
+    public void SetItem(Item item,int index = 0) { 
         itemImage.sprite = item.imageFile;
         titleText.text = item.title;
         subTitleText.text = item.subTitle;
+        Index = index; 
     }
 
     public static explicit operator Cell(GameObject v)

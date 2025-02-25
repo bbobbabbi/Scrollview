@@ -229,11 +229,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 402460728}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 1}
+  m_SizeDelta: {x: 1080, y: 0}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &257336147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,7 +241,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 257336145}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
   m_Name: 
@@ -265,7 +265,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 257336145}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
   m_Name: 
@@ -420,6 +420,7 @@ GameObject:
   - component: {fileID: 402460728}
   - component: {fileID: 402460730}
   - component: {fileID: 402460729}
+  - component: {fileID: 402460731}
   m_Layer: 5
   m_Name: ViewPort
   m_TagString: Untagged
@@ -485,6 +486,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 402460727}
   m_CullTransparentMesh: 1
+--- !u!114 &402460731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 402460727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 1
 --- !u!1 &892257865
 GameObject:
   m_ObjectHideFlags: 0
@@ -635,6 +649,7 @@ GameObject:
   - component: {fileID: 1236360761}
   - component: {fileID: 1236360760}
   - component: {fileID: 1236360762}
+  - component: {fileID: 1236360763}
   m_Layer: 5
   m_Name: Scrollview
   m_TagString: Untagged
@@ -670,7 +685,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1236360758}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3560966f2545b5b4e8603349ef83adcf, type: 3}
   m_Name: 
@@ -694,7 +709,7 @@ MonoBehaviour:
   m_MovementType: 1
   m_Elasticity: 0.1
   m_Inertia: 1
-  m_DecelerationRate: 0.135
+  m_DecelerationRate: 0.035
   m_ScrollSensitivity: 1
   m_Viewport: {fileID: 402460728}
   m_HorizontalScrollbar: {fileID: 0}
@@ -706,8 +721,8 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1236360760}
-        m_TargetAssemblyTypeName: ScrollviewController, Assembly-CSharp
+      - m_Target: {fileID: 1236360763}
+        m_TargetAssemblyTypeName: NewScrollviewController, Assembly-CSharp
         m_MethodName: OnValueChanged
         m_Mode: 0
         m_Arguments:
@@ -730,9 +745,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf6d1b7c7d8365049889655a7a8ca08f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 3858120025227787709, guid: aac55ad7160748345ac5a47b4a65f9e4, type: 3}
-  poolSize: 8
+  Prefab: {fileID: 3935001863761797180, guid: 78100a3613a2c374c9d19f769ead8034, type: 3}
+  poolSize: 0
   parentsTransform: {fileID: 257336146}
+--- !u!114 &1236360763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236360758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f29075cf03646fb40823a4a8580f9788, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ContentTransform: {fileID: 257336146}
 --- !u!1 &1617415856
 GameObject:
   m_ObjectHideFlags: 0

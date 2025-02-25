@@ -4,12 +4,15 @@ using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEditor.Progress;
+using static UnityEngine.Rendering.DebugUI;
 
 [RequireComponent(typeof(ScrollRect))]
 [RequireComponent(typeof(RectTransform))]
 [RequireComponent(typeof(ObjectPool))]
-public class ScrollviewController : MonoBehaviour
+public class NeScrollviewController : MonoBehaviour
 {
+
+    ///content에 content size filter를 설정했을 때의 코드입니다
     [SerializeField] private Transform ContentTransform;
 
     private ScrollRect _scrollRect;
@@ -18,9 +21,12 @@ public class ScrollviewController : MonoBehaviour
     private List<Item> _items;
     private Sprite[] _sprites;
     private int nextImageIndex;
-    private int beforImageIndex;
+    private int beforeImageIndex;
+    private float previousScrollPosition = 0f;
     private List<GameObject> _poolingObjects;
-    
+    private const int cellHeight = 300;
+
+
 
     private void Awake()
     {
@@ -29,7 +35,7 @@ public class ScrollviewController : MonoBehaviour
         _rectTransform = GetComponent<RectTransform>();
         _sprites = Resources.LoadAll<Sprite>("Items_12");
         _poolingObjects = new List<GameObject>();
-    
+
     }
     private void Start()
     {
@@ -38,24 +44,26 @@ public class ScrollviewController : MonoBehaviour
     /// <summary>
     /// 필요한 만큼 셀 생성
     /// </summary>
-    private void Init() {
+    private void Init()
+    {
         LoadAllData();
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 8; i++)
+        {
             var obj = _objectPool.GetObject();
             _poolingObjects.Add(obj);
             SetCellData(_poolingObjects[i], i);
-           nextImageIndex = i;
+            nextImageIndex = i;
         }
-        
+        var contentSizeDelta = _scrollRect.content.sizeDelta;
+        contentSizeDelta.y = _items.Count * cellHeight;
+        _scrollRect.content.sizeDelta = contentSizeDelta;
+
     }
-
-
-
-
     /// <summary>
     /// 화면에 출력
     /// </summary>
-    private void SetCellData(GameObject cellObject,int imgIndex) {
+    private void SetCellData(GameObject cellObject, int imgIndex)
+    {
         cellObject.GetComponent<Cell>().SetItem(_items[imgIndex]);
     }
     private void LoadAllData()
@@ -71,18 +79,19 @@ public class ScrollviewController : MonoBehaviour
         _items = new List<Item>();
         for (int i = 0; i < 54; i++)
         {
-            _items.Add(new Item { imageFile = _sprites[i], title = $"Title {i+1}", subTitle = $"Subtitle {i + 1}" });
+            _items.Add(new Item { imageFile = _sprites[i], title = $"Title {i + 1}", subTitle = $"Subtitle {i + 1}" });
         }
     }
 
-    public void OnValueChanged(Vector2 Value) {
+    public void OnValueChanged(Vector2 Value)
+    {
+        float currentScrollPosition = Value.y;
         var yPosition = _scrollRect.content.anchoredPosition.y;
-        var totalHeight = _rectTransform.rect.height;;
-       
-        if ((int)Value.y <= 0)
+        var totalHeight = _rectTransform.rect.height; ;
+
+        if (currentScrollPosition < previousScrollPosition) 
         {
-            //위쪽으로 땡김 즉 아래쪽으로 가고있음
-            if (Mathf.Abs(yPosition)>300)
+            if (Mathf.Abs(yPosition) > cellHeight)
             {
                 if (nextImageIndex >= 52) { return; }
                 _objectPool.ReturnObject(_poolingObjects[0]);
@@ -90,28 +99,26 @@ public class ScrollviewController : MonoBehaviour
                 _scrollRect.content.anchoredPosition = Vector2.zero;
                 var cellObject = _objectPool.GetObject();
                 SetCellData(cellObject, ++nextImageIndex);
-                beforImageIndex = nextImageIndex - 8;
+                beforeImageIndex = nextImageIndex - 8;
                 cellObject.transform.SetAsLastSibling();
                 _poolingObjects.Add(cellObject);
             }
         }
-        else
+        else if (currentScrollPosition > previousScrollPosition)
         {
             if (yPosition < 0)
             {
-                if (beforImageIndex <= 0) { return; }
+                if (beforeImageIndex <= 0) { return; }
                 var cellObject = _objectPool.GetObject();
                 cellObject.transform.SetAsFirstSibling();
-                SetCellData(cellObject, --beforImageIndex);
-                _scrollRect.content.anchoredPosition = new Vector2(0,300);
-                _poolingObjects.Insert(0,cellObject);
-                nextImageIndex = beforImageIndex + 8;                
-                _objectPool.ReturnObject(_poolingObjects[_poolingObjects.Count-1]);
+                SetCellData(cellObject, --beforeImageIndex);
+                _scrollRect.content.anchoredPosition = new Vector2(0, cellHeight);
+                _poolingObjects.Insert(0, cellObject);
+                nextImageIndex = beforeImageIndex + 8;
+                _objectPool.ReturnObject(_poolingObjects[_poolingObjects.Count - 1]);
                 _poolingObjects.RemoveAt(_poolingObjects.Count - 1);
             }
         }
-
-        Debug.Log((int)Value.y);
-       
+        previousScrollPosition = currentScrollPosition;
     }
 }
